@@ -22,13 +22,11 @@
     h2 { margin: 16px 0 20px; font-size: 1.5em; }
     .controls { margin-bottom: 12px; }
     input { font-size: 14px; padding: 6px 8px; margin-right: 8px; width: 70%; }
-    button { font-size: 14px; padding: 6px 12px; }
     .block {
       background: #fff;
       border-radius: 8px;
       margin: 16px 0;
       padding: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
     .label { font-size: 1em; color: #444; margin-bottom: 6px; }
     .maitree {
@@ -54,9 +52,9 @@
 </head>
 <body>
   <h2>Maitree Blog Title Responsive Line Tester</h2>
+
   <div class="controls">
-    <input id="titleInput" placeholder="Paste your title here">
-    <button onclick="measureAll()">Test Fit</button>
+    <input id="titleInput" placeholder="Paste your title here" oninput="handleInput()">
   </div>
 
   <div class="block">
@@ -76,80 +74,88 @@
   </div>
 
   <script>
-  const BREAKPOINTS = [
-    { id: 'desktop', requiredLines: 3, minLast: 180, maxLast: 259.9, width: 260 },
-    { id: 'tablet',  requiredLines: 3, minLast: 100, maxLast: 223.9, width: 224 },
-    { id: 'mobile',  requiredLines: 2, minLast: 160, maxLast: 303.9, width: 304 }
-  ];
+    const BREAKPOINTS = [
+      { id: 'desktop', requiredLines: 3, minLast: 180, maxLast: 259.9, width: 260 },
+      { id: 'tablet',  requiredLines: 3, minLast: 100, maxLast: 223.9, width: 224 },
+      { id: 'mobile',  requiredLines: 2, minLast: 160, maxLast: 303.9, width: 304 }
+    ];
 
-  // fallback per-char range only if getClientRects gives one line
-  function measureLines(box) {
-    const rects = Array.from(box.getClientRects())
-                        .filter(r => r.width > 1);       // ignore zero- or near-zero
-    if (rects.length > 1) {
-      // use these native line‐rects
-      return rects.map(r => Math.round(r.width * 100) / 100);
-    }
-    // else fallback to per-character Range
-    const tn = Array.from(box.childNodes)
-                    .find(n => n.nodeType === Node.TEXT_NODE);
-    if (!tn) return [];
-    const charRects = [];
-    const range = document.createRange();
-    for (let i = 0; i < tn.length; i++) {
-      range.setStart(tn, i);
-      range.setEnd(tn, i+1);
-      const r = range.getClientRects()[0];
-      if (r && r.width > 0) charRects.push({ top: Math.round(r.top), width: r.width });
-    }
-    if (!charRects.length) return [];
-    const lines = [];
-    let top = charRects[0].top, sum = 0;
-    for (let {top: t, width} of charRects) {
-      if (t !== top) {
-        lines.push(Math.round(sum * 100) / 100);
-        sum = 0; top = t;
+    // Measure the width of each rendered line in the box
+    function measureLines(box) {
+      const rects = Array.from(box.getClientRects())
+                          .filter(r => r.width > 1);
+      if (rects.length > 1) {
+        return rects.map(r => Math.round(r.width * 100) / 100);
       }
-      sum += width;
+      // Fallback: measure per-character
+      const tn = Array.from(box.childNodes)
+                      .find(n => n.nodeType === Node.TEXT_NODE);
+      if (!tn) return [];
+      const charRects = [];
+      const range = document.createRange();
+      for (let i = 0; i < tn.length; i++) {
+        range.setStart(tn, i);
+        range.setEnd(tn, i+1);
+        const r = range.getClientRects()[0];
+        if (r && r.width > 0) charRects.push({ top: Math.round(r.top), width: r.width });
+      }
+      if (!charRects.length) return [];
+      const lines = [];
+      let top = charRects[0].top, sum = 0;
+      for (let {top: t, width} of charRects) {
+        if (t !== top) {
+          lines.push(Math.round(sum * 100) / 100);
+          sum = 0; top = t;
+        }
+        sum += width;
+      }
+      lines.push(Math.round(sum * 100) / 100);
+      return lines;
     }
-    lines.push(Math.round(sum * 100) / 100);
-    return lines;
-  }
 
-  function schemaCheck(lineWidths, bp) {
-    const fail = msg => `<span style="color:#d12b3a;font-weight:bold;">❌ FAIL</span> <span style="color:#d12b3a;">${msg}</span>`;
-    const pass = () => `<span style="color:#1bb956;font-weight:bold;">✅ PASS!</span>`;
+    // Validate against required schema
+    function schemaCheck(lineWidths, bp) {
+      const fail = msg => `<span style="color:#d12b3a;font-weight:bold;">❌ FAIL</span> <span style="color:#d12b3a;">${msg}</span>`;
+      const pass = () => `<span style="color:#1bb956;font-weight:bold;">✅ PASS!</span>`;
 
-    if (lineWidths.length !== bp.requiredLines)
-      return fail(`Requires ${bp.requiredLines} lines, found ${lineWidths.length}`);
-    for (let w of lineWidths) {
-      if (w > bp.width)
-        return fail(`A line is ${Math.round(w*100)/100}px (> ${bp.width}px)`);
+      if (lineWidths.length !== bp.requiredLines)
+        return fail(`Requires ${bp.requiredLines} lines, found ${lineWidths.length}`);
+      for (let w of lineWidths) {
+        if (w > bp.width)
+          return fail(`A line is ${Math.round(w*100)/100}px (> ${bp.width}px)`);
+      }
+      const last = lineWidths[lineWidths.length - 1];
+      if (last < bp.minLast)
+        return fail(`Last line too short: ${Math.round(last*100)/100}px < ${bp.minLast}px`);
+      if (last > bp.maxLast)
+        return fail(`Last line too long: ${Math.round(last*100)/100}px > ${bp.maxLast}px`);
+      return pass();
     }
-    const last = lineWidths[lineWidths.length-1];
-    if (last < bp.minLast)
-      return fail(`Last line too short: ${Math.round(last*100)/100}px < ${bp.minLast}px`);
-    if (last > bp.maxLast)
-      return fail(`Last line too long: ${Math.round(last*100)/100}px > ${bp.maxLast}px`);
-    return pass();
-  }
 
-  function measureAll() {
-    const title = document.getElementById('titleInput').value;
-    BREAKPOINTS.forEach(bp => {
-      document.getElementById(bp.id).textContent = title;
-    });
-    setTimeout(() => {
+    // Update all boxes with the current title
+    function measureAll() {
+      const title = document.getElementById('titleInput').value;
       BREAKPOINTS.forEach(bp => {
-        const box = document.getElementById(bp.id);
-        const lw = measureLines(box);
-        let out = lw.map((w,i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
-                + `\nLines: ${lw.length}\n\n`
-                + schemaCheck(lw, bp);
-        document.getElementById(bp.id+'Result').innerHTML = out;
+        document.getElementById(bp.id).textContent = title;
       });
-    }, 50);
-  }
+      setTimeout(() => {
+        BREAKPOINTS.forEach(bp => {
+          const box = document.getElementById(bp.id);
+          const lw = measureLines(box);
+          let out = lw.map((w, i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
+                  + `\nLines: ${lw.length}\n\n`
+                  + schemaCheck(lw, bp);
+          document.getElementById(bp.id + 'Result').innerHTML = out;
+        });
+      }, 50);
+    }
+
+    // Debounced input handler
+    let debounceTimer;
+    function handleInput() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(measureAll, 10);
+    }
   </script>
 </body>
 </html>
