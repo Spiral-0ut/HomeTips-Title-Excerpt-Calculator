@@ -2,114 +2,235 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Maitree Blog Title Responsive Line Tester (Dark Mode)</title>
+  <title>Title & Excerpt Line Tester</title>
   <style>
     @font-face {
       font-family: 'Maitree';
-      src: url('Maitree-Bold.woff2') format('truetype');
+      src: url('Maitree-Bold.woff2') format('woff2');
       font-weight: bold;
       font-style: normal;
     }
+    @font-face {
+      font-family: 'HelveticaLight';
+      src: url('Helvetica-Light.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
     body {
-      font-family: Arial, sans-serif;
       background: #121212;
       color: #e0e0e0;
       margin: 0;
-      padding: 24px 48px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      font-family: Arial, sans-serif;
     }
-    h2 {
-      margin: 16px 0 20px;
-      font-size: 1.5em;
+    .grid {
+      display: grid;
+      grid-template-columns: 344px 344px 344px;
+      gap: 32px; /* <--- CHANGE THIS for spacing between columns/rows */
+      justify-content: center;
+      align-items: start;
+      max-width: 1552px;
+      margin: 48px auto;
+    }
+    .header {
+      font-size: 1.22em;
+      font-weight: bold;
+      margin-bottom: 16px;
       color: #fff;
+      text-align: left;
     }
-    .controls {
-      margin-bottom: 12px;
+    textarea {
+      background: #191919;
+      color: #fff;
+      border: 1.5px solid #333;
+      border-radius: 6px;
+      padding: 12px 20px;
+      width: 344px;
+      font-size: 17px;
+      resize: none;
+      box-sizing: border-box;
+      outline: none;
+      min-height: 64px;
+      max-height: 130px;
+      line-height: 1.4;
+      margin-bottom: 0;
+      display: block;
+      font-family: inherit;
     }
-    input {
-      font-size: 14px;
-      padding: 6px 8px;
-      margin-right: 8px;
-      width: 70%;
-      background: #1e1e1e;
-      color: #e0e0e0;
-      border: 1px solid #333;
-      border-radius: 4px;
+    .test-block, .stack-box {
+      border-radius: 12px;
+      background: #191919;
+      padding: 18px 20px 16px 20px;
+      transition: background 0.16s, border 0.16s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1.5px solid transparent;
+      box-sizing: border-box;
+      width: 344px !important;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      min-height: 88px;
     }
-    .block {
-      background: #1e1e1e;
-      border-radius: 8px;
-      margin: 16px 0;
-      padding: 16px;
+    .stack-box {
+      width: 344px !important;
+      justify-content: flex-start;
+      gap: 10px;
     }
     .label {
+      color: #b6b6b6;
+      margin-bottom: 8px;
       font-size: 1em;
-      color: #bbb;
-      margin-bottom: 6px;
+      font-weight: 500;
     }
-    .maitree {
+    .maitree-title {
       font-family: 'Maitree', serif;
       font-weight: bold;
-      margin: 0 0 8px;
       line-height: 1.18;
-      word-break: break-word;
+      color: #fff;
+      margin-bottom: 0;
       white-space: normal;
-      color: #e0e0e0;
+      word-break: break-word;
+      background: transparent;
     }
-    #desktop { font-size: 20px; width: 260px; }
-    #tablet  { font-size: 18px; width: 224px; }
-    #mobile  { font-size: 16px; width: 304px; }
-    pre {
-      background: #2e2e2e;
-      border-radius: 6px;
-      padding: 10px;
-      margin: 0;
-      white-space: pre-wrap;
-      font-size: 0.95em;
-      color: #e0e0e0;
+    .helvetica-excerpt {
+      font-family: 'HelveticaLight', Arial, sans-serif;
+      font-weight: normal;
+      line-height: 1.22;
+      color: #fff;
+      margin-bottom: 0;
+      background: transparent;
+      white-space: normal;
+      word-break: break-word;
     }
-    /* PASS / FAIL colors */
-    .pass { color: #6cc070; font-weight: bold; }
-    .fail { color: #e57373; font-weight: bold; }
+    .result-fail, .result-pass {
+      margin-top: 10px;
+      font-size: 1.04em;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      display: block;
+      white-space: nowrap;
+      color: #fff;
+    }
+    .result-fail { color: #fff; }
+    .result-pass { color: #fff; }
+    .pxlines {
+      color: #bbb;
+      font-size: 0.92em;
+      margin-top: 6px;
+      line-height: 1.2;
+      font-family: 'Menlo', 'Consolas', monospace;
+      white-space: nowrap;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      padding-top: 0;
+      margin-bottom: 0;
+      letter-spacing: 0;
+    }
+    .pass {
+      background: #1a3724 !important;
+      border: 1.5px solid #21883e !important;
+    }
+    .fail {
+      background: #3b1920 !important;
+      border: 1.5px solid #d03d46 !important;
+    }
+    .neutral {
+      background: #191919 !important;
+      border: 1.5px solid transparent !important;
+    }
+    /* Only these (inner) get breakpoint widths */
+    #stackTitle-desktop, #stackExcerpt-desktop, #titleBox-desktop, #excerptBox-desktop { width: 260px !important; }
+    #stackTitle-tablet, #stackExcerpt-tablet, #titleBox-tablet, #excerptBox-tablet { width: 224px !important; }
+    #stackTitle-mobile, #stackExcerpt-mobile, #titleBox-mobile, #excerptBox-mobile { width: 304px !important; }
+    @media (max-width: 1200px) {
+      .grid { gap: 24px; }
+    }
+    @media (max-width: 1150px) {
+      .grid { grid-template-columns: 1fr; gap: 24px; max-width: 99vw;}
+      .test-block, .stack-box { width: 99vw !important; }
+      textarea { width: 99vw !important; }
+    }
   </style>
 </head>
 <body>
-  <h2>Maitree Blog Title Responsive Line Tester (Dark Mode)</h2>
-
-  <div class="controls">
-    <input id="titleInput" placeholder="Paste your title here" oninput="handleInput()">
+  <div class="grid">
+    <!-- Row 1: Inputs -->
+    <div>
+      <div class="header">Maitree Title Tester</div>
+      <textarea id="titleInput" rows="3" maxlength="97" placeholder="Paste your title here"></textarea>
+    </div>
+    <div></div>
+    <div>
+      <div class="header">Helvetica Excerpt Tester</div>
+      <textarea id="excerptInput" rows="3" maxlength="97" placeholder="Paste your excerpt here"></textarea>
+    </div>
+    <!-- Row 2: Desktop -->
+    <div id="title-desktop" class="test-block neutral">
+      <div class="label">Desktop (20px, 260px)</div>
+      <div id="titleBox-desktop" class="maitree-title" style="font-size:20px;"></div>
+      <div id="result-title-desktop" class="result-fail"></div>
+      <div id="pxlines-title-desktop" class="pxlines"></div>
+    </div>
+    <div id="stack-desktop" class="stack-box neutral">
+      <div id="stackTitle-desktop" class="maitree-title stack-title" style="font-size:20px;"></div>
+      <div id="stackExcerpt-desktop" class="helvetica-excerpt stack-excerpt" style="font-size:14px;"></div>
+    </div>
+    <div id="excerpt-desktop" class="test-block neutral">
+      <div class="label">Desktop (14px, 260px)</div>
+      <div id="excerptBox-desktop" class="helvetica-excerpt" style="font-size:14px;"></div>
+      <div id="result-excerpt-desktop" class="result-fail"></div>
+      <div id="pxlines-excerpt-desktop" class="pxlines"></div>
+    </div>
+    <!-- Row 3: Tablet -->
+    <div id="title-tablet" class="test-block neutral">
+      <div class="label">Tablet (18px, 224px)</div>
+      <div id="titleBox-tablet" class="maitree-title" style="font-size:18px;"></div>
+      <div id="result-title-tablet" class="result-fail"></div>
+      <div id="pxlines-title-tablet" class="pxlines"></div>
+    </div>
+    <div id="stack-tablet" class="stack-box neutral">
+      <div id="stackTitle-tablet" class="maitree-title stack-title" style="font-size:18px;"></div>
+      <div id="stackExcerpt-tablet" class="helvetica-excerpt stack-excerpt" style="font-size:12px;"></div>
+    </div>
+    <div id="excerpt-tablet" class="test-block neutral">
+      <div class="label">Tablet (12px, 224px)</div>
+      <div id="excerptBox-tablet" class="helvetica-excerpt" style="font-size:12px;"></div>
+      <div id="result-excerpt-tablet" class="result-fail"></div>
+      <div id="pxlines-excerpt-tablet" class="pxlines"></div>
+    </div>
+    <!-- Row 4: Mobile -->
+    <div id="title-mobile" class="test-block neutral">
+      <div class="label">Mobile (16px, 304px)</div>
+      <div id="titleBox-mobile" class="maitree-title" style="font-size:16px;"></div>
+      <div id="result-title-mobile" class="result-fail"></div>
+      <div id="pxlines-title-mobile" class="pxlines"></div>
+    </div>
+    <div id="stack-mobile" class="stack-box neutral">
+      <div id="stackTitle-mobile" class="maitree-title stack-title" style="font-size:16px;"></div>
+      <div id="stackExcerpt-mobile" class="helvetica-excerpt stack-excerpt" style="font-size:15px;"></div>
+    </div>
+    <div id="excerpt-mobile" class="test-block neutral">
+      <div class="label">Mobile (15px, 304px)</div>
+      <div id="excerptBox-mobile" class="helvetica-excerpt" style="font-size:15px;"></div>
+      <div id="result-excerpt-mobile" class="result-fail"></div>
+      <div id="pxlines-excerpt-mobile" class="pxlines"></div>
+    </div>
   </div>
-
-  <div class="block">
-    <div class="label">Desktop (20px, 260px):</div>
-    <div id="desktop" class="maitree"></div>
-    <pre id="desktopResult"></pre>
-  </div>
-  <div class="block">
-    <div class="label">Tablet (18px, 224px):</div>
-    <div id="tablet" class="maitree"></div>
-    <pre id="tabletResult"></pre>
-  </div>
-  <div class="block">
-    <div class="label">Mobile (16px, 304px):</div>
-    <div id="mobile" class="maitree"></div>
-    <pre id="mobileResult"></pre>
-  </div>
-
   <script>
-    const BREAKPOINTS = [
-      { id: 'desktop', requiredLines: 3, minLast: 180, maxLast: 259.9, width: 260 },
-      { id: 'tablet',  requiredLines: 3, minLast: 100, maxLast: 223.9, width: 224 },
-      { id: 'mobile',  requiredLines: 2, minLast: 160, maxLast: 303.9, width: 304 }
+    const titleBreakpoints = [
+      { key: 'desktop', font: 20, width: 260, lines: 3, minLast: 180, maxLast: 259.9 },
+      { key: 'tablet', font: 18, width: 224, lines: 3, minLast: 100, maxLast: 223.9 },
+      { key: 'mobile', font: 16, width: 304, lines: 2, minLast: 160, maxLast: 303.9 }
+    ];
+    const excerptBreakpoints = [
+      { key: 'desktop', font: 14, width: 260, lines: 2 },
+      { key: 'tablet', font: 12, width: 224, lines: 2 },
+      { key: 'mobile', font: 15, width: 304, lines: 2 }
     ];
 
     function measureLines(box) {
       const rects = Array.from(box.getClientRects()).filter(r => r.width > 1);
-      if (rects.length > 1) {
-        return rects.map(r => Math.round(r.width * 100) / 100);
-      }
+      if (rects.length > 1) return rects.map(r => Math.round(r.width));
       const tn = Array.from(box.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
       if (!tn) return [];
       const charRects = [];
@@ -124,56 +245,158 @@
       const lines = [];
       let top = charRects[0].top, sum = 0;
       for (let {top: t, width} of charRects) {
-        if (t !== top) {
-          lines.push(Math.round(sum * 100) / 100);
-          sum = 0; top = t;
-        }
+        if (t !== top) { lines.push(Math.round(sum)); sum = 0; top = t; }
         sum += width;
       }
-      lines.push(Math.round(sum * 100) / 100);
+      lines.push(Math.round(sum));
       return lines;
     }
 
-    function schemaCheck(lineWidths, bp) {
-      const fail = msg => `<span class="fail">❌ FAIL</span> <span class="fail">${msg}</span>`;
-      const pass = () => `<span class="pass">✅ PASS!</span>`;
-
-      if (lineWidths.length !== bp.requiredLines)
-        return fail(`Requires ${bp.requiredLines} lines, found ${lineWidths.length}`);
-      for (let w of lineWidths) {
-        if (w > bp.width)
-          return fail(`A line is ${Math.round(w*100)/100}px (> ${bp.width}px)`);
+    function checkTitle(lines, bp) {
+      if (lines.length < bp.lines) {
+        if (lines.length === 0) return { pass: false, msg: `Too Short!` };
+        const last = lines[lines.length-1];
+        const remain = bp.minLast - last;
+        return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
       }
-      const last = lineWidths[lineWidths.length - 1];
-      if (last < bp.minLast)
-        return fail(`Last line too short: ${Math.round(last*100)/100}px < ${bp.minLast}px`);
-      if (last > bp.maxLast)
-        return fail(`Last line too long: ${Math.round(last*100)/100}px > ${bp.maxLast}px`);
-      return pass();
+      if (lines.length > bp.lines) {
+        // User exceeded the allowed number of lines: show the px width of the overflow line.
+        const overflowPx = lines[lines.length-1];
+        return { pass: false, msg: `${overflowPx}px Too Long!` };
+      }
+      for (let i=0; i<lines.length; i++) {
+        if (lines[i] > bp.width)
+          return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
+      }
+      const last = lines[lines.length-1];
+      if (last < bp.minLast) return { pass: false, msg: `${Math.round(bp.minLast-last)}px Too Short!` };
+      if (last > bp.maxLast) return { pass: false, msg: `${Math.round(last-bp.maxLast)}px Too Long!` };
+      return { pass: true, msg: '' };
     }
 
-    function measureAll() {
-      const title = document.getElementById('titleInput').value;
-      BREAKPOINTS.forEach(bp => {
-        document.getElementById(bp.id).textContent = title;
+    function checkExcerpt(lines, bp) {
+      if (lines.length < 2) {
+        if (lines.length === 0) return { pass: false, msg: `Too Short!` };
+        const last = lines[lines.length-1];
+        const min2 = Math.round(bp.width * 0.65);
+        const remain = min2 - last;
+        return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
+      }
+      if (lines.length > 2) {
+        // User exceeded allowed lines: show width of overflow line
+        const overflowPx = lines[lines.length-1];
+        return { pass: false, msg: `${overflowPx}px Too Long!` };
+      }
+      for (let i=0; i<lines.length; i++) {
+        if (lines[i] > bp.width)
+          return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
+      }
+      const min2 = Math.round(bp.width * 0.65);
+      if (lines[1] < min2) return { pass: false, msg: `${min2-lines[1]}px Too Short!` };
+      return { pass: true, msg: '' };
+    }
+
+    function setBlockState(id, state) {
+      const el = document.getElementById(id);
+      el.classList.remove('pass','fail','neutral');
+      el.classList.add(state);
+    }
+    function setStackBlockState(stackId, tstate, estate) {
+      const stack = document.getElementById(stackId);
+      stack.classList.remove('pass','fail','neutral');
+      let state = (tstate === 'neutral' && estate === 'neutral') ? 'neutral' : (tstate === 'fail' || estate === 'fail') ? 'fail' : 'pass';
+      stack.classList.add(state);
+      const st = stack.querySelector('.stack-title');
+      const se = stack.querySelector('.stack-excerpt');
+      st.style.background = tstate === 'pass' ? '#1a3724' : tstate === 'fail' ? '#3b1920' : '#191919';
+      se.style.background = estate === 'pass' ? '#1a3724' : estate === 'fail' ? '#3b1920' : '#191919';
+    }
+    function pxLineText(lines) {
+      return lines.map((w,i) => `L${i+1}-${w}px`).join('|');
+    }
+    function render() {
+      const title = document.getElementById('titleInput').value.trim();
+      const excerpt = document.getElementById('excerptInput').value.trim();
+      let anyTitle = title.length > 0;
+      let anyExcerpt = excerpt.length > 0;
+
+      titleBreakpoints.forEach((bp,i) => {
+        const tbox = document.getElementById('titleBox-'+bp.key);
+        tbox.textContent = title;
+        setTimeout(() => {
+          const lines = measureLines(tbox);
+          let res = { pass: false, msg: '' };
+          let state = 'neutral';
+          if (anyTitle) {
+            res = checkTitle(lines, bp);
+            state = res.pass ? 'pass' : 'fail';
+          }
+          let result = '';
+          if (anyTitle) {
+            if (state === 'pass') {
+              result = `<span class="result-pass">PASS</span>`;
+            } else {
+              result = `<span class="result-fail">FAIL – ${res.msg}</span>`;
+            }
+          }
+          document.getElementById('result-title-'+bp.key).innerHTML = result;
+          setBlockState('title-'+bp.key, state);
+          document.getElementById('pxlines-title-'+bp.key).textContent = anyTitle ? pxLineText(lines) : '';
+          // stack title
+          const stackT = document.getElementById('stackTitle-'+bp.key);
+          stackT.textContent = title;
+        },20);
       });
-      setTimeout(() => {
-        BREAKPOINTS.forEach(bp => {
-          const box = document.getElementById(bp.id);
-          const lw = measureLines(box);
-          let out = lw.map((w,i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
-                  + `\nLines: ${lw.length}\n\n`
-                  + schemaCheck(lw, bp);
-          document.getElementById(bp.id + 'Result').innerHTML = out;
-        });
-      }, 50);
-    }
 
-    let debounceTimer;
-    function handleInput() {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(measureAll, 100);
+      excerptBreakpoints.forEach((bp,i) => {
+        const ebox = document.getElementById('excerptBox-'+bp.key);
+        ebox.textContent = excerpt;
+        setTimeout(() => {
+          const lines = measureLines(ebox);
+          let res = { pass: false, msg: '' };
+          let state = 'neutral';
+          if (anyExcerpt) {
+            res = checkExcerpt(lines, bp);
+            state = res.pass ? 'pass' : 'fail';
+          }
+          let result = '';
+          if (anyExcerpt) {
+            if (state === 'pass') {
+              result = `<span class="result-pass">PASS</span>`;
+            } else {
+              result = `<span class="result-fail">FAIL – ${res.msg}</span>`;
+            }
+          }
+          document.getElementById('result-excerpt-'+bp.key).innerHTML = result;
+          setBlockState('excerpt-'+bp.key, state);
+          document.getElementById('pxlines-excerpt-'+bp.key).textContent = anyExcerpt ? pxLineText(lines) : '';
+          // stack excerpt
+          const stackE = document.getElementById('stackExcerpt-'+bp.key);
+          stackE.textContent = excerpt;
+        },22);
+      });
+
+      setTimeout(() => {
+        titleBreakpoints.forEach((bp,i) => {
+          const tbox = document.getElementById('titleBox-'+bp.key);
+          const ebox = document.getElementById('excerptBox-'+bp.key);
+          const tlines = measureLines(tbox);
+          const elines = measureLines(ebox);
+          let tstate = 'neutral', estate = 'neutral';
+          if (anyTitle) tstate = checkTitle(tlines, bp).pass ? 'pass' : 'fail';
+          if (anyExcerpt) estate = checkExcerpt(elines, excerptBreakpoints[i]).pass ? 'pass' : 'fail';
+          setStackBlockState('stack-'+bp.key, tstate, estate);
+        });
+      },45);
     }
+    let debounce;
+    document.getElementById('titleInput').addEventListener('input', function() {
+      clearTimeout(debounce); debounce = setTimeout(render,70);
+    });
+    document.getElementById('excerptInput').addEventListener('input', function() {
+      clearTimeout(debounce); debounce = setTimeout(render,70);
+    });
+    window.addEventListener('DOMContentLoaded', ()=>{render();});
   </script>
 </body>
 </html>
