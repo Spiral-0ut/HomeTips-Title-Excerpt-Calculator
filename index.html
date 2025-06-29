@@ -1,1 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Maitree Blog Title Responsive Line Tester</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9fb;
+      margin: 0;
+      padding: 24px 48px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 { margin: 16px 0 20px; font-size: 1.5em; }
+    .controls { margin-bottom: 12px; }
+    input { font-size: 14px; padding: 6px 8px; margin-right: 8px; width: 70%; }
+    button { font-size: 14px; padding: 6px 12px; }
+    .block {
+      background: #fff;
+      border-radius: 8px;
+      margin: 16px 0;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .label { font-size: 1em; color: #444; margin-bottom: 6px; }
+    .maitree {
+      font-family: 'Maitree', serif;
+      font-weight: bold;
+      margin: 0 0 8px;
+      line-height: 1.18;
+      word-break: break-word;
+      white-space: normal;
+    }
+    #desktop { font-size: 20px; width: 260px; }
+    #tablet  { font-size: 18px; width: 224px; }
+    #mobile  { font-size: 16px; width: 304px; }
+    pre {
+      background: #f4f5f7;
+      border-radius: 6px;
+      padding: 10px;
+      margin: 0;
+      white-space: pre-wrap;
+      font-size: 0.95em;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Maitree:700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h2>Maitree Blog Title Responsive Line Tester</h2>
+  <div class="controls">
+    <input id="titleInput" placeholder="Paste your title here">
+    <button onclick="measureAll()">Test Fit</button>
+  </div>
 
+  <div class="block">
+    <div class="label">Desktop (20px, 260px):</div>
+    <div id="desktop" class="maitree"></div>
+    <pre id="desktopResult"></pre>
+  </div>
+  <div class="block">
+    <div class="label">Tablet (18px, 224px):</div>
+    <div id="tablet" class="maitree"></div>
+    <pre id="tabletResult"></pre>
+  </div>
+  <div class="block">
+    <div class="label">Mobile (16px, 304px):</div>
+    <div id="mobile" class="maitree"></div>
+    <pre id="mobileResult"></pre>
+  </div>
+
+  <script>
+  const BREAKPOINTS = [
+    { id: 'desktop', requiredLines: 3, minLast: 180, maxLast: 259.9, width: 260 },
+    { id: 'tablet',  requiredLines: 3, minLast: 100, maxLast: 223.9, width: 224 },
+    { id: 'mobile',  requiredLines: 2, minLast: 160, maxLast: 303.9, width: 304 }
+  ];
+
+  // fallback per-char range only if getClientRects gives one line
+  function measureLines(box) {
+    const rects = Array.from(box.getClientRects())
+                        .filter(r => r.width > 1);       // ignore zero- or near-zero
+    if (rects.length > 1) {
+      // use these native line‐rects
+      return rects.map(r => Math.round(r.width * 100) / 100);
+    }
+    // else fallback to per-character Range
+    const tn = Array.from(box.childNodes)
+                    .find(n => n.nodeType === Node.TEXT_NODE);
+    if (!tn) return [];
+    const charRects = [];
+    const range = document.createRange();
+    for (let i = 0; i < tn.length; i++) {
+      range.setStart(tn, i);
+      range.setEnd(tn, i+1);
+      const r = range.getClientRects()[0];
+      if (r && r.width > 0) charRects.push({ top: Math.round(r.top), width: r.width });
+    }
+    if (!charRects.length) return [];
+    const lines = [];
+    let top = charRects[0].top, sum = 0;
+    for (let {top: t, width} of charRects) {
+      if (t !== top) {
+        lines.push(Math.round(sum * 100) / 100);
+        sum = 0; top = t;
+      }
+      sum += width;
+    }
+    lines.push(Math.round(sum * 100) / 100);
+    return lines;
+  }
+
+  function schemaCheck(lineWidths, bp) {
+    const fail = msg => `<span style="color:#d12b3a;font-weight:bold;">❌ FAIL</span> <span style="color:#d12b3a;">${msg}</span>`;
+    const pass = () => `<span style="color:#1bb956;font-weight:bold;">✅ PASS!</span>`;
+
+    if (lineWidths.length !== bp.requiredLines)
+      return fail(`Requires ${bp.requiredLines} lines, found ${lineWidths.length}`);
+    for (let w of lineWidths) {
+      if (w > bp.width)
+        return fail(`A line is ${Math.round(w*100)/100}px (> ${bp.width}px)`);
+    }
+    const last = lineWidths[lineWidths.length-1];
+    if (last < bp.minLast)
+      return fail(`Last line too short: ${Math.round(last*100)/100}px < ${bp.minLast}px`);
+    if (last > bp.maxLast)
+      return fail(`Last line too long: ${Math.round(last*100)/100}px > ${bp.maxLast}px`);
+    return pass();
+  }
+
+  function measureAll() {
+    const title = document.getElementById('titleInput').value;
+    BREAKPOINTS.forEach(bp => {
+      document.getElementById(bp.id).textContent = title;
+    });
+    setTimeout(() => {
+      BREAKPOINTS.forEach(bp => {
+        const box = document.getElementById(bp.id);
+        const lw = measureLines(box);
+        let out = lw.map((w,i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
+                + `\nLines: ${lw.length}\n\n`
+                + schemaCheck(lw, bp);
+        document.getElementById(bp.id+'Result').innerHTML = out;
+      });
+    }, 50);
+  }
+  </script>
+</body>
+</html>
