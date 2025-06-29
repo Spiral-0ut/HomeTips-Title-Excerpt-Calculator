@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Maitree Blog Title Responsive Line Tester</title>
+  <title>Maitree Blog Title Responsive Line Tester (Dark Mode)</title>
   <style>
     @font-face {
       font-family: 'Maitree';
@@ -12,23 +12,43 @@
     }
     body {
       font-family: Arial, sans-serif;
-      background: #f9f9fb;
+      background: #121212;
+      color: #e0e0e0;
       margin: 0;
       padding: 24px 48px;
       max-width: 800px;
       margin-left: auto;
       margin-right: auto;
     }
-    h2 { margin: 16px 0 20px; font-size: 1.5em; }
-    .controls { margin-bottom: 12px; }
-    input { font-size: 14px; padding: 6px 8px; margin-right: 8px; width: 70%; }
+    h2 {
+      margin: 16px 0 20px;
+      font-size: 1.5em;
+      color: #fff;
+    }
+    .controls {
+      margin-bottom: 12px;
+    }
+    input {
+      font-size: 14px;
+      padding: 6px 8px;
+      margin-right: 8px;
+      width: 70%;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
     .block {
-      background: #fff;
+      background: #1e1e1e;
       border-radius: 8px;
       margin: 16px 0;
       padding: 16px;
     }
-    .label { font-size: 1em; color: #444; margin-bottom: 6px; }
+    .label {
+      font-size: 1em;
+      color: #bbb;
+      margin-bottom: 6px;
+    }
     .maitree {
       font-family: 'Maitree', serif;
       font-weight: bold;
@@ -36,22 +56,27 @@
       line-height: 1.18;
       word-break: break-word;
       white-space: normal;
+      color: #e0e0e0;
     }
     #desktop { font-size: 20px; width: 260px; }
     #tablet  { font-size: 18px; width: 224px; }
     #mobile  { font-size: 16px; width: 304px; }
     pre {
-      background: #f4f5f7;
+      background: #2e2e2e;
       border-radius: 6px;
       padding: 10px;
       margin: 0;
       white-space: pre-wrap;
       font-size: 0.95em;
+      color: #e0e0e0;
     }
+    /* PASS / FAIL colors */
+    .pass { color: #6cc070; font-weight: bold; }
+    .fail { color: #e57373; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h2>Maitree Blog Title Responsive Line Tester</h2>
+  <h2>Maitree Blog Title Responsive Line Tester (Dark Mode)</h2>
 
   <div class="controls">
     <input id="titleInput" placeholder="Paste your title here" oninput="handleInput()">
@@ -80,16 +105,12 @@
       { id: 'mobile',  requiredLines: 2, minLast: 160, maxLast: 303.9, width: 304 }
     ];
 
-    // Measure the width of each rendered line in the box
     function measureLines(box) {
-      const rects = Array.from(box.getClientRects())
-                          .filter(r => r.width > 1);
+      const rects = Array.from(box.getClientRects()).filter(r => r.width > 1);
       if (rects.length > 1) {
         return rects.map(r => Math.round(r.width * 100) / 100);
       }
-      // Fallback: measure per-character
-      const tn = Array.from(box.childNodes)
-                      .find(n => n.nodeType === Node.TEXT_NODE);
+      const tn = Array.from(box.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
       if (!tn) return [];
       const charRects = [];
       const range = document.createRange();
@@ -113,10 +134,9 @@
       return lines;
     }
 
-    // Validate against required schema
     function schemaCheck(lineWidths, bp) {
-      const fail = msg => `<span style="color:#d12b3a;font-weight:bold;">❌ FAIL</span> <span style="color:#d12b3a;">${msg}</span>`;
-      const pass = () => `<span style="color:#1bb956;font-weight:bold;">✅ PASS!</span>`;
+      const fail = msg => `<span class="fail">❌ FAIL</span> <span class="fail">${msg}</span>`;
+      const pass = () => `<span class="pass">✅ PASS!</span>`;
 
       if (lineWidths.length !== bp.requiredLines)
         return fail(`Requires ${bp.requiredLines} lines, found ${lineWidths.length}`);
@@ -132,7 +152,6 @@
       return pass();
     }
 
-    // Update all boxes with the current title
     function measureAll() {
       const title = document.getElementById('titleInput').value;
       BREAKPOINTS.forEach(bp => {
@@ -142,7 +161,7 @@
         BREAKPOINTS.forEach(bp => {
           const box = document.getElementById(bp.id);
           const lw = measureLines(box);
-          let out = lw.map((w, i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
+          let out = lw.map((w,i) => `Line ${i+1}: ${Math.round(w*100)/100}px`).join('\n')
                   + `\nLines: ${lw.length}\n\n`
                   + schemaCheck(lw, bp);
           document.getElementById(bp.id + 'Result').innerHTML = out;
@@ -150,11 +169,10 @@
       }, 50);
     }
 
-    // Debounced input handler
     let debounceTimer;
     function handleInput() {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(measureAll, 10);
+      debounceTimer = setTimeout(measureAll, 100);
     }
   </script>
 </body>
