@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Title & Excerpt Line Tester</title>
+  <title>HomeTips – Title & Excerpt Tester</title>
   <style>
     @font-face {
       font-family: 'Maitree';
@@ -11,25 +11,42 @@
       font-style: normal;
     }
     @font-face {
+      font-family: 'MaitreeRegular';
+      src: url('Maitree-Regular.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
       font-family: 'HelveticaLight';
       src: url('Helvetica-Light.woff2') format('woff2');
       font-weight: normal;
       font-style: normal;
     }
+
     body {
       background: #121212;
       color: #e0e0e0;
       margin: 0;
       font-family: Arial, sans-serif;
     }
+    .main-app-title {
+      color: #fff;
+      font-size: 2.3em;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 36px;
+      margin-bottom: 16px;
+      font-family: 'Maitree', Arial, sans-serif;
+      letter-spacing: 0.01em;
+    }
     .grid {
       display: grid;
       grid-template-columns: 344px 344px 344px;
-      gap: 32px; /* <--- CHANGE THIS for spacing between columns/rows */
+      gap: 20px;
       justify-content: center;
       align-items: start;
       max-width: 1552px;
-      margin: 48px auto;
+      margin: 18px auto 0 auto;
     }
     .header {
       font-size: 1.22em;
@@ -138,7 +155,6 @@
       background: #191919 !important;
       border: 1.5px solid transparent !important;
     }
-
     .preview-title {
       font-weight: bold;
       text-align: center;
@@ -148,25 +164,106 @@
       margin-bottom: 8px;
       letter-spacing: 0.01em;
       line-height: 1.2;
-    } 
-
+    }
     /* Only these (inner) get breakpoint widths */
     #stackTitle-desktop, #stackExcerpt-desktop, #titleBox-desktop, #excerptBox-desktop { width: 260px !important; }
     #stackTitle-tablet, #stackExcerpt-tablet, #titleBox-tablet, #excerptBox-tablet { width: 224px !important; }
     #stackTitle-mobile, #stackExcerpt-mobile, #titleBox-mobile, #excerptBox-mobile { width: 304px !important; }
+
+    /* --- NEW: Post Preview Containers --- */
+    .post-preview-block {
+      border-radius: 12px;
+      padding: 24px 28px 24px 28px;
+      margin: 20px auto 20px auto;
+      background: #191919;
+      box-sizing: border-box;
+      border: 1.5px solid transparent;
+      width: 1020px;
+      transition: background 0.16s, border 0.16s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .post-preview-block.tablet { width: 790px; }
+    .post-preview-block.mobile { width: 376px; }
+    .post-preview-title {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 18px;
+      font-family: 'Maitree', Arial, sans-serif;
+      letter-spacing: 0.01em;
+    }
+    .post-preview-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: 960px;
+      gap: 20px;
+    }
+    .post-preview-block.tablet .post-preview-stack { width: 730px; gap: 20px; }
+    .post-preview-block.mobile .post-preview-stack { width: 316px; gap: 10px; }
+    .post-title {
+      font-family: 'MaitreeRegular', serif;
+      color: #fff;
+      font-weight: normal;
+      background: transparent;
+      margin-bottom: 0;
+      margin-top: 0;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+      width: 100%;
+      text-align: center;
+    }
+
+    .post-preview-block .post-excerpt {
+      font-family: 'HelveticaLight' !important;
+      font-style: normal
+      font-weight: normal !important;
+      background: transparent;
+      color: #fff;
+      margin: 0;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
+      width: 100%;
+      text-align: center;
+    }
+    .post-preview-block.pass {
+      background: #1a3724 !important;
+      border: 1.5px solid #21883e !important;
+    }
+    .post-preview-block.fail {
+      background: #3b1920 !important;
+      border: 1.5px solid #d03d46 !important;
+    }
+    .post-preview-block.neutral {
+      background: #191919 !important;
+      border: 1.5px solid transparent !important;
+    }
     @media (max-width: 1200px) {
-      .grid { gap: 24px; }
+      .grid { gap: 16px; }
+      .post-preview-block { width: 98vw; }
+      .post-preview-stack { width: 90vw; }
+      .post-preview-block.tablet { width: 98vw; }
+      .post-preview-block.mobile { width: 98vw; }
+      .post-preview-block .post-preview-stack { width: 90vw; }
     }
     @media (max-width: 1150px) {
-      .grid { grid-template-columns: 1fr; gap: 24px; max-width: 99vw;}
+      .grid { grid-template-columns: 1fr; gap: 14px; max-width: 99vw;}
       .test-block, .stack-box { width: 99vw !important; }
       textarea { width: 99vw !important; }
+      .post-preview-block, .post-preview-block.tablet, .post-preview-block.mobile { width: 99vw; }
+      .post-preview-stack { width: 95vw; }
     }
   </style>
 </head>
 <body>
+  <h1 class="main-app-title">HomeTips – Title & Excerpt Tester</h1>
   <div class="grid">
-    <!-- Row 1: Inputs -->
     <div>
       <div class="header">Maitree Title</div>
       <textarea id="titleInput" rows="3" maxlength="97" placeholder="Paste your title here"></textarea>
@@ -176,7 +273,6 @@
       <div class="header">Helvetica Excerpt</div>
       <textarea id="excerptInput" rows="3" maxlength="97" placeholder="Paste your excerpt here"></textarea>
     </div>
-    <!-- Row 2: Desktop -->
     <div id="title-desktop" class="test-block neutral">
       <div class="label">Desktop - 3 Lines, Font=20px, Box=260px</div>
       <div id="titleBox-desktop" class="maitree-title" style="font-size:20px;"></div>
@@ -194,7 +290,6 @@
       <div id="result-excerpt-desktop" class="result-fail"></div>
       <div id="pxlines-excerpt-desktop" class="pxlines"></div>
     </div>
-    <!-- Row 3: Tablet -->
     <div id="title-tablet" class="test-block neutral">
       <div class="label">Tablet - 3 Lines, Font=18px, Box=224px</div>
       <div id="titleBox-tablet" class="maitree-title" style="font-size:18px;"></div>
@@ -212,7 +307,6 @@
       <div id="result-excerpt-tablet" class="result-fail"></div>
       <div id="pxlines-excerpt-tablet" class="pxlines"></div>
     </div>
-    <!-- Row 4: Mobile -->
     <div id="title-mobile" class="test-block neutral">
       <div class="label">Mobile - 2 Lines, Font=16px, Box=304px</div>
       <div id="titleBox-mobile" class="maitree-title" style="font-size:16px;"></div>
@@ -231,7 +325,32 @@
       <div id="pxlines-excerpt-mobile" class="pxlines"></div>
     </div>
   </div>
+
+  <!-- POST PREVIEWS (UNDER THE GRID) -->
+  <div id="postPreview-desktop" class="post-preview-block neutral">
+    <div class="post-preview-title">Desktop Post Preview</div>
+    <div class="post-preview-stack">
+      <div id="postPreviewTitle-desktop" class="post-title" style="font-size:50px;"></div>
+      <div id="postPreviewExcerpt-desktop" class="post-excerpt" style="font-size:20px;"></div>
+    </div>
+  </div>
+  <div id="postPreview-tablet" class="post-preview-block tablet neutral">
+    <div class="post-preview-title">Tablet Post Preview</div>
+    <div class="post-preview-stack">
+      <div id="postPreviewTitle-tablet" class="post-title" style="font-size:38px;"></div>
+      <div id="postPreviewExcerpt-tablet" class="post-excerpt" style="font-size:17px;"></div>
+    </div>
+  </div>
+  <div id="postPreview-mobile" class="post-preview-block mobile neutral">
+    <div class="post-preview-title">Mobile Post Preview</div>
+    <div class="post-preview-stack">
+      <div id="postPreviewTitle-mobile" class="post-title" style="font-size:26px;"></div>
+      <div id="postPreviewExcerpt-mobile" class="post-excerpt" style="font-size:14px;"></div>
+    </div>
+  </div>
+
   <script>
+    // ---- Title/Excerpt Testers Logic (unchanged) ----
     const titleBreakpoints = [
       { key: 'desktop', font: 20, width: 260, lines: 3, minLast: 180, maxLast: 259.9 },
       { key: 'tablet', font: 18, width: 224, lines: 3, minLast: 100, maxLast: 223.9 },
@@ -268,48 +387,50 @@
     }
 
     function checkTitle(lines, bp) {
-      if (lines.length < bp.lines) {
-        if (lines.length === 0) return { pass: false, msg: `Too Short!` };
-        const last = lines[lines.length-1];
-        const remain = bp.minLast - last;
-        return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
-      }
-      if (lines.length > bp.lines) {
-        // User exceeded the allowed number of lines: show the px width of the overflow line.
-        const overflowPx = lines[lines.length-1];
-        return { pass: false, msg: `${overflowPx}px Too Long!` };
-      }
-      for (let i=0; i<lines.length; i++) {
-        if (lines[i] > bp.width)
-          return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
-      }
-      const last = lines[lines.length-1];
-      if (last < bp.minLast) return { pass: false, msg: `${Math.round(bp.minLast-last)}px Too Short!` };
-      if (last > bp.maxLast) return { pass: false, msg: `${Math.round(last-bp.maxLast)}px Too Long!` };
-      return { pass: true, msg: '' };
-    }
+  if (lines.length < bp.lines) {
+    if (lines.length === 0) return { pass: false, msg: `Too Short!` };
+    // Calculate total px still needed to reach minimum valid (all required lines at minLast)
+    let total = lines.reduce((a, b) => a + b, 0);
+    let target = bp.minLast * bp.lines;
+    let remain = target - total;
+    return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
+  }
+  if (lines.length > bp.lines) {
+    const overflowPx = lines[lines.length-1];
+    return { pass: false, msg: `${overflowPx}px Too Long!` };
+  }
+  for (let i=0; i<lines.length; i++) {
+    if (lines[i] > bp.width)
+      return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
+  }
+  const last = lines[lines.length-1];
+  if (last < bp.minLast) return { pass: false, msg: `${Math.round(bp.minLast-last)}px Too Short!` };
+  if (last > bp.maxLast) return { pass: false, msg: `${Math.round(last-bp.maxLast)}px Too Long!` };
+  return { pass: true, msg: '' };
+}
 
     function checkExcerpt(lines, bp) {
-      if (lines.length < 2) {
-        if (lines.length === 0) return { pass: false, msg: `Too Short!` };
-        const last = lines[lines.length-1];
-        const min2 = Math.round(bp.width * 0.65);
-        const remain = min2 - last;
-        return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
-      }
-      if (lines.length > 2) {
-        // User exceeded allowed lines: show width of overflow line
-        const overflowPx = lines[lines.length-1];
-        return { pass: false, msg: `${overflowPx}px Too Long!` };
-      }
-      for (let i=0; i<lines.length; i++) {
-        if (lines[i] > bp.width)
-          return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
-      }
-      const min2 = Math.round(bp.width * 0.65);
-      if (lines[1] < min2) return { pass: false, msg: `${min2-lines[1]}px Too Short!` };
-      return { pass: true, msg: '' };
-    }
+  if (lines.length < 2) {
+    if (lines.length === 0) return { pass: false, msg: `Too Short!` };
+    // Total minimum required = 2 * min2 (for 2 lines at min 65% each)
+    const min2 = Math.round(bp.width * 0.65);
+    let total = lines.reduce((a, b) => a + b, 0);
+    let target = min2 * 2;
+    let remain = target - total;
+    return { pass: false, msg: `${remain > 0 ? remain : 0}px Too Short!` };
+  }
+  if (lines.length > 2) {
+    const overflowPx = lines[lines.length-1];
+    return { pass: false, msg: `${overflowPx}px Too Long!` };
+  }
+  for (let i=0; i<lines.length; i++) {
+    if (lines[i] > bp.width)
+      return { pass: false, msg: `${Math.round(lines[i]-bp.width)}px Too Long!` };
+  }
+  const min2 = Math.round(bp.width * 0.65);
+  if (lines[1] < min2) return { pass: false, msg: `${min2-lines[1]}px Too Short!` };
+  return { pass: true, msg: '' };
+}
 
     function setBlockState(id, state) {
       const el = document.getElementById(id);
@@ -329,12 +450,14 @@
     function pxLineText(lines) {
       return lines.map((w,i) => `L${i+1}-${w}px`).join('|');
     }
+
     function render() {
       const title = document.getElementById('titleInput').value.trim();
       const excerpt = document.getElementById('excerptInput').value.trim();
       let anyTitle = title.length > 0;
       let anyExcerpt = excerpt.length > 0;
 
+      // ============ Regular Testers ==============
       titleBreakpoints.forEach((bp,i) => {
         const tbox = document.getElementById('titleBox-'+bp.key);
         tbox.textContent = title;
@@ -392,6 +515,7 @@
       });
 
       setTimeout(() => {
+        // Card stack coloring
         titleBreakpoints.forEach((bp,i) => {
           const tbox = document.getElementById('titleBox-'+bp.key);
           const ebox = document.getElementById('excerptBox-'+bp.key);
@@ -402,7 +526,142 @@
           if (anyExcerpt) estate = checkExcerpt(elines, excerptBreakpoints[i]).pass ? 'pass' : 'fail';
           setStackBlockState('stack-'+bp.key, tstate, estate);
         });
-      },45);
+
+        // --- POST PREVIEW LOGIC ---
+
+        // Helper to get Card fail/pass
+        function cardPass(idx) {
+          const tbox = document.getElementById('titleBox-'+titleBreakpoints[idx].key);
+          const ebox = document.getElementById('excerptBox-'+excerptBreakpoints[idx].key);
+          const tlines = measureLines(tbox);
+          const elines = measureLines(ebox);
+          let tCard = 'neutral', eCard = 'neutral';
+          if (anyTitle) tCard = checkTitle(tlines, titleBreakpoints[idx]).pass ? 'pass' : 'fail';
+          if (anyExcerpt) eCard = checkExcerpt(elines, excerptBreakpoints[idx]).pass ? 'pass' : 'fail';
+          return (tCard === 'fail' || eCard === 'fail') ? 'fail' : (tCard === 'pass' && eCard === 'pass' ? 'pass' : 'neutral');
+        }
+
+        // POST PREVIEW - DESKTOP
+        const postTitleD = document.getElementById('postPreviewTitle-desktop');
+        const postExcerptD = document.getElementById('postPreviewExcerpt-desktop');
+        postTitleD.textContent = title;
+        postExcerptD.textContent = excerpt;
+        let postTitleBox = document.createElement('div');
+        postTitleBox.style.position = 'absolute';
+        postTitleBox.style.visibility = 'hidden';
+        postTitleBox.style.width = '960px';
+        postTitleBox.style.fontFamily = "'MaitreeRegular', serif";
+        postTitleBox.style.fontWeight = 'normal';
+        postTitleBox.style.fontSize = '50px';
+        postTitleBox.style.lineHeight = '1.4';
+        postTitleBox.textContent = title;
+        document.body.appendChild(postTitleBox);
+        let tLines = measureLines(postTitleBox);
+        document.body.removeChild(postTitleBox);
+
+        let postExcerptBox = document.createElement('div');
+        postExcerptBox.style.position = 'absolute';
+        postExcerptBox.style.visibility = 'hidden';
+        postExcerptBox.style.width = '960px';
+        postExcerptBox.style.fontFamily = "'HelveticaLightItalic', Arial, sans-serif";
+        postExcerptBox.style.fontWeight = 'normal';
+        postExcerptBox.style.fontStyle = 'italic';
+        postExcerptBox.style.fontSize = '20px';
+        postExcerptBox.style.lineHeight = '1.4';
+        postExcerptBox.textContent = excerpt;
+        document.body.appendChild(postExcerptBox);
+        let eLines = measureLines(postExcerptBox);
+        document.body.removeChild(postExcerptBox);
+
+        let dTitlePass = !anyTitle ? 'neutral' : (tLines.length === 2 ? 'pass' : 'fail');
+        let dExcerptPass = !anyExcerpt ? 'neutral' : (eLines.length === 1 ? 'pass' : 'fail');
+        let cardResultD = cardPass(0); // Card preview result for desktop
+        let desktopPostState = 'neutral';
+        if (dTitlePass === 'fail' || dExcerptPass === 'fail' || cardResultD === 'fail') desktopPostState = 'fail';
+        else if (dTitlePass === 'pass' && dExcerptPass === 'pass' && cardResultD === 'pass') desktopPostState = 'pass';
+        document.getElementById('postPreview-desktop').className = 'post-preview-block ' + desktopPostState;
+
+        // POST PREVIEW - TABLET
+        const postTitleT = document.getElementById('postPreviewTitle-tablet');
+        const postExcerptT = document.getElementById('postPreviewExcerpt-tablet');
+        postTitleT.textContent = title;
+        postExcerptT.textContent = excerpt;
+        let postTitleBoxT = document.createElement('div');
+        postTitleBoxT.style.position = 'absolute';
+        postTitleBoxT.style.visibility = 'hidden';
+        postTitleBoxT.style.width = '730px';
+        postTitleBoxT.style.fontFamily = "'MaitreeRegular', serif";
+        postTitleBoxT.style.fontWeight = 'normal';
+        postTitleBoxT.style.fontSize = '38px';
+        postTitleBoxT.style.lineHeight = '1.4';
+        postTitleBoxT.textContent = title;
+        document.body.appendChild(postTitleBoxT);
+        let tLinesT = measureLines(postTitleBoxT);
+        document.body.removeChild(postTitleBoxT);
+
+        let postExcerptBoxT = document.createElement('div');
+        postExcerptBoxT.style.position = 'absolute';
+        postExcerptBoxT.style.visibility = 'hidden';
+        postExcerptBoxT.style.width = '730px';
+        postExcerptBoxT.style.fontFamily = "'HelveticaLightItalic', Arial, sans-serif";
+        postExcerptBoxT.style.fontWeight = 'normal';
+        postExcerptBoxT.style.fontStyle = 'italic';
+        postExcerptBoxT.style.fontSize = '17px';
+        postExcerptBoxT.style.lineHeight = '1.4';
+        postExcerptBoxT.textContent = excerpt;
+        document.body.appendChild(postExcerptBoxT);
+        let eLinesT = measureLines(postExcerptBoxT);
+        document.body.removeChild(postExcerptBoxT);
+
+        let tTitlePass = !anyTitle ? 'neutral' : (tLinesT.length === 2 ? 'pass' : 'fail');
+        let tExcerptPass = !anyExcerpt ? 'neutral' : (eLinesT.length === 1 ? 'pass' : 'fail');
+        let cardResultT = cardPass(1); // Card preview result for tablet
+        let tabletPostState = 'neutral';
+        if (tTitlePass === 'fail' || tExcerptPass === 'fail' || cardResultT === 'fail') tabletPostState = 'fail';
+        else if (tTitlePass === 'pass' && tExcerptPass === 'pass' && cardResultT === 'pass') tabletPostState = 'pass';
+        document.getElementById('postPreview-tablet').className = 'post-preview-block tablet ' + tabletPostState;
+
+        // POST PREVIEW - MOBILE
+        const postTitleM = document.getElementById('postPreviewTitle-mobile');
+        const postExcerptM = document.getElementById('postPreviewExcerpt-mobile');
+        postTitleM.textContent = title;
+        postExcerptM.textContent = excerpt;
+        let postTitleBoxM = document.createElement('div');
+        postTitleBoxM.style.position = 'absolute';
+        postTitleBoxM.style.visibility = 'hidden';
+        postTitleBoxM.style.width = '316px';
+        postTitleBoxM.style.fontFamily = "'MaitreeRegular', serif";
+        postTitleBoxM.style.fontWeight = 'normal';
+        postTitleBoxM.style.fontSize = '26px';
+        postTitleBoxM.style.lineHeight = '1.4';
+        postTitleBoxM.textContent = title;
+        document.body.appendChild(postTitleBoxM);
+        let tLinesM = measureLines(postTitleBoxM);
+        document.body.removeChild(postTitleBoxM);
+
+        let postExcerptBoxM = document.createElement('div');
+        postExcerptBoxM.style.position = 'absolute';
+        postExcerptBoxM.style.visibility = 'hidden';
+        postExcerptBoxM.style.width = '316px';
+        postExcerptBoxM.style.fontFamily = "'HelveticaLightItalic', Arial, sans-serif";
+        postExcerptBoxM.style.fontWeight = 'normal';
+        postExcerptBoxM.style.fontStyle = 'italic';
+        postExcerptBoxM.style.fontSize = '14px';
+        postExcerptBoxM.style.lineHeight = '1.4';
+        postExcerptBoxM.textContent = excerpt;
+        document.body.appendChild(postExcerptBoxM);
+        let eLinesM = measureLines(postExcerptBoxM);
+        document.body.removeChild(postExcerptBoxM);
+
+        let mTitlePass = !anyTitle ? 'neutral' : (tLinesM.length === 3 ? 'pass' : 'fail');
+        let mExcerptPass = !anyExcerpt ? 'neutral' : (eLinesM.length === 2 ? 'pass' : 'fail');
+        let cardResultM = cardPass(2); // Card preview result for mobile
+        let mobilePostState = 'neutral';
+        if (mTitlePass === 'fail' || mExcerptPass === 'fail' || cardResultM === 'fail') mobilePostState = 'fail';
+        else if (mTitlePass === 'pass' && mExcerptPass === 'pass' && cardResultM === 'pass') mobilePostState = 'pass';
+        document.getElementById('postPreview-mobile').className = 'post-preview-block mobile ' + mobilePostState;
+
+      },60);
     }
     let debounce;
     document.getElementById('titleInput').addEventListener('input', function() {
